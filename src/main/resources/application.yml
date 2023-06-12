@@ -1,0 +1,109 @@
+server:
+  port: 8072
+  shutdown: graceful
+  tomcat:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 50
+      min-spare: 5
+
+spring:
+  application:
+    name: gateway-service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  config:
+    import: "optional:configserver:"   # Imports configuration data from a config server when available
+  cloud:
+    config:
+      uri: http://localhost:8071
+      request-connect-timeout: 5000   # Timeout on waiting to connect to the config server (ms)
+      request-read-timeout: 5000      # Timeout on waiting to read configuration data from the config server (ms)
+      fail-fast: true                 # In production, set to true. Makes a failure to connect to the config server fatal
+      retry:
+        max-attempts: 6
+        initial-interval: 1000        # Initial retry interval for backoff (ms)
+        max-interval: 2000            # Maximum retry interval for backoff (ms)
+        multiplier: 1.1               # Multiplier to compute the next interval
+    gateway:
+      httpclient:                       # Configuration properties for the HTTP client
+        connect-timeout: 2000           # Time limit for a connection to be established (in ms)
+        response-timeout: 5s            # Time limit for a response to be received (Duration). Resilience4j will tak e precedence
+        pool:
+          type: elastic                 # Type of connection pool (elastic, fixed, or disabled)
+          max-idle-time: 15s            # Idle time after which the communication channel will be closed
+          max-life-time: 60s            # Time after which the communication channel will be closed
+      default-filters:
+        - SaveSession                   # Ensures the session data is saved before forwarding a request downstream
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter:
+              replenishRate: 10         # Number of tokens dripped in the bucket each second
+              burstCapacity: 20         # Allow request burst of up to 20 request
+              requestedTokens: 1        # How many tokens a request costs
+        - name: Retry
+          args:
+            retries: 3                  # Maximum of 3 retry attempts
+            methods: GET                # Retries only GET requests
+            series: SERVER_ERROR        # Retries only when 5XX errors
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException # Retries only when the given exceptions are thrown
+            backoff:                    # Retries with a delay computed as ?firstBackoff * (factor ^ n)?
+              firstBackoff: 50ms
+              maxBackOff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+  profiles:
+    active: local
+
+  session:
+    store-type: redis                   # If we define 'none' type is a form to disable session management through Redis
+    timeout: 10m
+    redis:
+      namespace: ailegorreta:gateway
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:                                        # Default configuration bean for all circuit breakers
+        slidingWindowSize: 20                         # The size of the sliding window used to record the outcome of calls when the circuit is closed
+        permittedNumberOfCallsInHalfOpenState: 5      # Number of permitted calls when the circuit is half-open
+        failureRateThreshold: 50                      # When the failure rate is above the threshold, the circuit becomes open.
+        waitDurationInOpenState: 15000                # Waiting time before moving from open to half-open (ms)
+  timelimiter:
+    configs:
+      default:                                        # Default configuration bean for all time limiter
+        timeoutDuration: 5s                           # Configures a timeout (seconds)
+
+logging:
+  level:
+    com:
+      netflix: WARN
+      springframework:
+        web: WARN
+        core:
+          codec:
+            StringDecoder: TRACE
+      ailegorreta:
+        gatewayservice: WARN
+    io.github.resilience4j: DEBUG                     # This DEBUG log is to follow the state transition os the circuit breaker
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+info:
+  system: Marketplace AILegorreta
+
+# Monitoring with actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway, env, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+
+
