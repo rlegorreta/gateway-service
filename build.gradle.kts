@@ -49,6 +49,8 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 	implementation("org.springframework.session:spring-session-data-redis")
 
+	implementation("org.apache.commons:commons-lang3:3.12.0")
+	implementation("org.slf4j:slf4j-api")
 	implementation("com.ailegorreta:ailegorreta-commons-utils:${property("ailegorreta-kit-version")}")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
