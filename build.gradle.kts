@@ -19,6 +19,13 @@ repositories {
 	mavenLocal()
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/snapshot") }
+	maven {
+		url = uri("https://maven.pkg.github.com/rlegorreta/ailegorreta-kit-commons-utils")
+		credentials {
+			username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+			password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+		}
+	}
 }
 
 extra["springCloudVersion"] = "2022.0.3-SNAPSHOT"

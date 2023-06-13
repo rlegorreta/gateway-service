@@ -106,4 +106,8 @@ management:
       probes:
         enabled: true
 
+# Keys to get to github package
+gpr:
+  user: rlegorreta
+  key: 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
 
