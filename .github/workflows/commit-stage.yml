@@ -22,10 +22,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - name: Download artifacts              # Download any ai legorreta kit
-        uses: actions/download-artifact@v3
-        with:
-          name: ailegorreta-kit-commons-utils
       - name: Build, unit tests SKIPPED and integration tests  # We skipped test because on Intellij they work ok (bug¿?)
         run: |
           chmod +x gradlew
