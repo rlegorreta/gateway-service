@@ -28,7 +28,7 @@ jobs:
           ./gradlew build -x test \
                     -PregistryUrl=ghcr.io \
                     -PregistryUsername=${{ github.actor }} \
-                    -PregistryToken=${{ secrets.GITHUB_TOKEN }}
+                    -PregistryToken=${{ secrets.GITHUB_TOKEN }}x
       - name: Code vulnerability scanning
         uses: anchore/scan-action@v3          # Scans the codebase for vulnerabilities using grype.
         id: scan                              # Assigns an identifier to the current step so that it can be referenced from subsequent steps
