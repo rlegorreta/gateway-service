@@ -20,7 +20,7 @@ repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven {
-		url = uri("https://maven.pkg.github.com/rlegorreta/ailegorreta-kit-commons-utils")
+		url = uri(project.findProperty("registryUrl") as String? ?: System.getenv("URL"))
 		credentials {
 			username = project.findProperty("registryUsername") as String? ?: System.getenv("USERNAME")
 			password = project.findProperty("registryToken") as String? ?: System.getenv("TOKEN")
