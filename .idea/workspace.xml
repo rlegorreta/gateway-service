@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c1e8822-ec2f-472a-bbff-14d699569ea2" name="Changes" comment="" />
+    <list default="true" id="9c1e8822-ec2f-472a-bbff-14d699569ea2" name="Changes" comment="Version 2.0.0">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/commit-stage.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/commit-stage.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.1/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.1/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,10 +36,16 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "spring.configuration.checksum": "3b46257a0d551afd100e501fe3b52066"
+    "spring.configuration.checksum": "3b46257a0d551afd100e501fe3b52066",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
@@ -58,7 +69,8 @@
       <option name="presentableId" value="Default" />
       <updated>1686599120013</updated>
       <workItem from="1686599121255" duration="348000" />
-      <workItem from="1686599474457" duration="1714000" />
+      <workItem from="1686599474457" duration="1941000" />
+      <workItem from="1686608498791" duration="1651000" />
     </task>
     <servers />
   </component>
@@ -80,5 +92,7 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
+    <MESSAGE value="Version 2.0.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 2.0.0" />
   </component>
 </project>
