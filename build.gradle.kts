@@ -22,8 +22,8 @@ repositories {
 	maven {
 		url = uri("https://maven.pkg.github.com/rlegorreta/ailegorreta-kit-commons-utils")
 		credentials {
-			username = project.findProperty("user") as String? ?: System.getenv("USERNAME")
-			password = project.findProperty("key") as String? ?: System.getenv("TOKEN")
+			username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+			password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
 		}
 	}
 }
