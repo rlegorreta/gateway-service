@@ -25,7 +25,7 @@ jobs:
       - name: Build, unit tests SKIPPED and integration tests  # We skipped test because on Intellij they work ok (bug¿?)
         run: |
           chmod +x gradlew
-          echo "ghcr.io: ${ghcr.io}"
+          echo "ghcr.io: ${{ env.REGISTRY }}"
           ./gradlew build -x test \
                     -PregistryUrl=ghcr.io \
                     -PregistryUsername=${{ github.actor }} \
