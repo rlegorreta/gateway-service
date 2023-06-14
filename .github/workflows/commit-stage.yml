@@ -5,6 +5,7 @@ env:
   REGISTRY: ghcr.io                           # Uses the GitHub Container Registry
   IMAGE_NAME: rlegorreta/gateway-service      # The image name all are lowe-case
   VERSION: latest
+  REGISTRY_PKG_COMMON_UTILS: rlegorreta/ailegorreta-kit-common-utils
 
 jobs:
   build:                                      # The job´s unique identifier.
@@ -25,9 +26,8 @@ jobs:
       - name: Build, unit tests SKIPPED and integration tests  # We skipped test because on Intellij they work ok (bug¿?)
         run: |
           chmod +x gradlew
-          echo "ghcr.io: ${{ env.REGISTRY }}"
           ./gradlew build -x test \
-                    -PregistryUrl=ghcr.io \
+                    -PregistryPackageUrl=${{ env.REGISTRY_PKG_COMMON_UTILS }} \
                     -PregistryUsername=${{ github.actor }} \
                     -PregistryToken=${{ secrets.GITHUB_TOKEN }}
       - name: Code vulnerability scanning
