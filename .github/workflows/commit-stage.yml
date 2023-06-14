@@ -46,7 +46,11 @@ jobs:
         uses: stefanprodan/kube-tools@v1      # An action capable of installing useful tools to work with Kubernetes
         with:
           kubectl: 1.24.3                     # Includes the Kubernetes CLI in the installation
-          kubeval: 0.16.1                     # Includes Kubeval in the installation. Validate k8s directory.
+          kubeval: 1.19.8                     # Includes Kubeval in the installation. Validate k8s directory.
+          # kubeval --strict -d k8s
           command: |
-            kubeval --strict -d k8s
+            kubeval --strict \
+                    - v 1.19.8 \
+            -s  https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/ deployment.yaml \
+            -d k8s
             
