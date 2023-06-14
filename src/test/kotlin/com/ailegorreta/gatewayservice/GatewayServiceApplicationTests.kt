@@ -36,28 +36,31 @@ import org.testcontainers.utility.DockerImageName
  *
  * @author rlh
  * @project : Gateway service
- * @date May 2023
+ * @date June 2023
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 /* ^ Loads a full Spring web application context and a web environment listening on a random port */
 @Testcontainers			/* Activates automatic startup and cleanup of test container */
 class GatewayServiceApplicationTests {
 
-	companion object { const val REDIS_PORT = 6379 }
+	companion object {
+		const val REDIS_PORT = 6379
 
-	/* Defines a Redis container for testing */
-	@Container
-	var redis: GenericContainer<*> = GenericContainer(DockerImageName.parse("redis:7.0"))
-																	 .withExposedPorts(REDIS_PORT)
+		/* Defines a Redis container for testing */
+		@Container
+		var redis: GenericContainer<*> = GenericContainer(DockerImageName.parse("redis:7.0"))
+																		 .withExposedPorts(REDIS_PORT)
 
-	/**
-	 * Overwrites the Redis configuration to point to the test Redis instance
-	 */
-	@DynamicPropertySource
-	fun redisProperties(registry: DynamicPropertyRegistry) {
-		registry.add("spring.data.redis.host") { redis.host }
-		registry.add("spring.data.redis.port") { redis.getMappedPort(REDIS_PORT) }
+		/**
+		 * Overwrites the Redis configuration to point to the test Redis instance
+		 */
+		@DynamicPropertySource
+		fun redisProperties(registry: DynamicPropertyRegistry) {
+			registry.add("spring.data.redis.host") { redis.host }
+			registry.add("spring.data.redis.port") { redis.getMappedPort(REDIS_PORT) }
+		}
 	}
+
 
 	/**
 	 * An empty test used to verify that the application context is loaded correctly and that a connection with Redis
