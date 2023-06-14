@@ -21,7 +21,7 @@ repositories {
 	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven {
 		name = "GitHubPackages"
-		url = uri(project.findProperty("registryUrl") as String? ?:
+		url = uri(project.findProperty("registryUrll") as String? ?:
 				  (System.getenv("URL") ?:
 				   "https://maven.pkg.github.com/rlegorreta/ailegorreta-kit-common-utils"))
 		credentials {
