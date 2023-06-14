@@ -20,6 +20,7 @@ repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven {
+		name = "GitHubPackages"
 		url = uri(project.findProperty("registryUrl") as String? ?:
 				  (System.getenv("URL") ?:
 				   "https://maven.pkg.github.com/rlegorreta/ailegorreta-kit-common-utils"))
@@ -49,8 +50,6 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 	implementation("org.springframework.session:spring-session-data-redis")
 
-	implementation("org.apache.commons:commons-lang3:3.12.0")
-	implementation("org.slf4j:slf4j-api")
 	implementation("com.ailegorreta:ailegorreta-commons-utils:${property("ailegorreta-kit-version")}")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
