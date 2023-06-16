@@ -19,14 +19,17 @@ repositories {
 	mavenLocal()
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/snapshot") }
+
 	maven {
 		name = "GitHubPackages"
 		url = uri("https://maven.pkg.github.com/" +
-					project.findProperty("registryPackageUrl") as String? ?:
-					System.getenv("URL_PACKAGE") ?:
-					"rlegorreta/ailegorreta-kit-common-utils")
+		project.findProperty("registryPackageUrl") as String? ?:
+			System.getenv("URL_PACKAGE") ?:
+			"rlegorreta/ailegorreta-kit")
 		credentials {
-			username = project.findProperty("registryUsername") as String? ?: System.getenv("USERNAME")
+			username = project.findProperty("registryUsername") as String? ?:
+					System.getenv("USERNAME") ?:
+					"rlegorreta"
 			password = project.findProperty("registryToken") as String? ?: System.getenv("TOKEN")
 		}
 	}
@@ -51,7 +54,7 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 	implementation("org.springframework.session:spring-session-data-redis")
 
-	implementation("com.ailegorreta:ailegorreta-commons-utils:${property("ailegorreta-kit-version")}")
+	implementation("com.ailegorreta:ailegorreta-kit-commons-utils:${property("ailegorreta-kit-version")}")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

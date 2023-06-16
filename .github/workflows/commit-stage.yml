@@ -5,7 +5,7 @@ env:
   REGISTRY: ghcr.io                           # Uses the GitHub Container Registry
   IMAGE_NAME: rlegorreta/gateway-service      # The image name all are lowe-case
   VERSION: latest
-  REGISTRY_PKG_COMMON_UTILS: rlegorreta/ailegorreta-kit-common-utils
+  REGISTRY_PKG_COMMON_UTILS: rlegorreta/ailegorreta-kit
 
 jobs:
   build:                                      # The job´s unique identifier.
