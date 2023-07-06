@@ -23,13 +23,13 @@ repositories {
 	maven {
 		name = "GitHubPackages"
 		url = uri("https://maven.pkg.github.com/" +
-		project.findProperty("registryPackageUrl") as String? ?:
-			System.getenv("URL_PACKAGE") ?:
-			"rlegorreta/ailegorreta-kit")
+					project.findProperty("registryPackageUrl") as String? ?:
+								System.getenv("URL_PACKAGE") ?:
+								"rlegorreta/ailegorreta-kit")
 		credentials {
 			username = project.findProperty("registryUsername") as String? ?:
-					System.getenv("USERNAME") ?:
-					"rlegorreta"
+								System.getenv("USERNAME") ?:
+								"rlegorreta"
 			password = project.findProperty("registryToken") as String? ?: System.getenv("TOKEN")
 		}
 	}
@@ -43,9 +43,15 @@ extra["ailegorreta-kit-version"] = "2.0.0"
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+
 	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	implementation("org.springframework.retry:spring-retry")
-	implementation ("org.springframework.boot:spring-boot-starter-actuator")
 
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 	runtimeOnly("io.opentelemetry.javaagent:opentelemetry-javaagent:${property("otelVersion")}")
@@ -55,8 +61,15 @@ dependencies {
 	implementation("org.springframework.session:spring-session-data-redis")
 
 	implementation("com.ailegorreta:ailegorreta-kit-commons-utils:${property("ailegorreta-kit-version")}")
+ 	implementation("com.ailegorreta:ailegorreta-kit-commons-security:${property("ailegorreta-kit-version")}")
+
+	implementation("org.webjars:webjars-locator-core")
+	implementation("org.webjars:bootstrap:5.2.3")
+	implementation("org.webjars:popper.js:2.9.3")
+	implementation("org.webjars:jquery:3.6.4")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.testcontainers:junit-jupiter")
 }

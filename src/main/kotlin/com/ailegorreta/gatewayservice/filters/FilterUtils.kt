@@ -48,7 +48,7 @@ class FilterUtils {
 
     fun getCorrelationId(requestHeaders: HttpHeaders): String? {
         return if (requestHeaders.get(CORRELATION_ID) != null) {
-            val header: List<String> = requestHeaders.get(CORRELATION_ID)!!
+            val header: List<String> = requestHeaders[CORRELATION_ID]!!
 
             header.stream().findFirst().get()
         } else

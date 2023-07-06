@@ -22,14 +22,27 @@
  */
 package com.ailegorreta.gatewayservice
 
+import com.ailegorreta.commons.security.config.SecurityConfig
+import com.ailegorreta.commons.security.repository.SessionRepository
+import com.ailegorreta.gatewayservice.user.UserController
+import com.ailegorreta.gatewayservice.web.IndexController
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
+
 
 /**
  * This tests utilizes a Redis test container
@@ -40,7 +53,10 @@ import org.testcontainers.utility.DockerImageName
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 /* ^ Loads a full Spring web application context and a web environment listening on a random port */
+//@WebFluxTest(IndexController::class)
+@AutoConfigureWebTestClient(timeout = "36000")
 @Testcontainers			/* Activates automatic startup and cleanup of test container */
+@Import(SecurityConfig::class)
 class GatewayServiceApplicationTests {
 
 	companion object {
@@ -61,6 +77,11 @@ class GatewayServiceApplicationTests {
 		}
 	}
 
+	@MockBean
+	var clientRegistrationRepository: ReactiveClientRegistrationRepository? = null
+
+	@Autowired
+	var webClient: WebTestClient? = null
 
 	/**
 	 * An empty test used to verify that the application context is loaded correctly and that a connection with Redis
@@ -68,6 +89,30 @@ class GatewayServiceApplicationTests {
 	 */
 	@Test
 	fun verifyThatSpringContextLoads() {
+		println("ReactiveClientRegistrationRepository:$clientRegistrationRepository")
+	}
+
+	@Test
+	@Throws(Exception::class)
+	fun indexWhenUnAuthenticatedThenRedirect() {
+		// @formatter:off
+		webClient!!.get()
+				   .uri("/")
+				   .exchange()
+				   .expectStatus().is3xxRedirection()
+		// @formatter:on
+	}
+
+	@Test
+	@WithMockUser
+	@Throws(Exception::class)
+	fun indexWhenAuthenticatedThenOk() {
+		// @formatter:off
+		webClient!!.get()
+				   .uri("/")
+			       .exchange()
+			       .expectStatus().isOk()
+		// @formatter:on
 	}
 
 }

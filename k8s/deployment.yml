@@ -30,3 +30,5 @@ spec:
               value: "50"
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-service
+            - name: AUTH_SERVICE_UIR
+              value: http://auth-service

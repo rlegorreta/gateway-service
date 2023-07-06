@@ -27,20 +27,32 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
+import java.security.Principal
 
 /**
  * The RequestRateLimiter filter relies on a KeyResolver bean to determine which bucket to use for each request.
  * By default, it uses the currently authenticated user in Spring Security.
  *
+ * Apply the rate limits to each user independently.
+ *
  * @author rlh
  * @project : Gateway service
- * @date May 2023
+ * @date June 2023
  */
 @Configuration
 class RateLimiterConfig {
+
     @Bean
     fun keyResolver(): KeyResolver {
-        return KeyResolver { _: ServerWebExchange -> Mono.just( "anonymous") }
-        /* ^ Rate limiting is applied to requests using a constant key. */
+        return KeyResolver { exchange: ServerWebExchange ->
+            /** Gets the currently authenticated user (the principal) from the current
+             *  request (the exchange)                                                  */
+            exchange.getPrincipal<Principal>()
+                    .map { obj: Principal -> obj.name }
+                    /** ^ Extracts the username from the principal */
+                    .defaultIfEmpty("anonymous")
+                    /** ^If the request is unauthenticated, it uses “anonymous” as
+                 *  the default key to apply rate-limiting.                        */
+        }
     }
 }

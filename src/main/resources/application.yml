@@ -1,16 +1,15 @@
 server:
   port: 8072
   shutdown: graceful
-  tomcat:
+  netty:
     connection-timeout: 2s
-    keep-alive-timeout: 15s
-    threads:
-      max: 50
-      min-spare: 5
+    idle-timeout: 15s
 
 spring:
   application:
     name: gateway-service
+  main:
+    allow-bean-definition-overriding: true
   lifecycle:
     timeout-per-shutdown-phase: 15s
   config:
@@ -36,6 +35,7 @@ spring:
           max-life-time: 60s            # Time after which the communication channel will be closed
       default-filters:
         - SaveSession                   # Ensures the session data is saved before forwarding a request downstream
+        - TokenRelay                    # Enables the propagation of the Access Token when calling a downstream service
         - name: RequestRateLimiter
           args:
             redis-rate-limiter:
@@ -55,12 +55,60 @@ spring:
               basedOnPreviousValue: false
   profiles:
     active: local
-
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway-service-oidc:
+            provider: spring
+            client-id: gateway-service
+            client-secret: gateway-service-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://gateway-service:8072/login/oauth2/code/{registrationId}"
+            scope: openid, iam.facultad
+            client-name: gateway-service-oidc
+          gateway-service-authorization-code:
+            provider: spring
+            client-id: gateway-service
+            client-secret: gateway-service-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://gateway-service:8072/authorized"
+            scope: iam.facultad
+            client-name: gateway-service-authorization-code
+          gateway-service-client-credentials:
+            provider: spring
+            client-id: gateway-service
+            client-secret: gateway-service-secret
+            authorization-grant-type: client_credentials
+            scope: iam.facultad
+            client-name: gateway-service-client-credentials
+          gateway-service-device-code:                      # TODO for future Spring Security mobile devices
+            provider: spring
+            client-id: device-gateway-service
+            client-authentication-method: none
+            authorization-grant-type: urn:ietf:params:oauth:grant-type:device_code
+            scope: iam.facultad
+            client-name: gateway-service-device-code
+        provider:
+          spring:
+            issuer-uri: http://auth-service:9000
+            # ^ for localNoDocker & localCmdLine an 'auth' must be declared in hosts file
+        rest:
+          client-id: gateway-service-oidc
+          # ^ this value must be the registered client-id to do rest calls, i.e., with client_credentials grant type
   session:
     store-type: redis                   # If we define 'none' type is a form to disable session management through Redis
     timeout: 10m
     redis:
       namespace: ailegorreta:gateway
+
+
+# Also needed by AuthServerUserLookupService
+security:
+  clientId: gateway-service
+  iam:
+    clientId: iam
+    provider-uri: http://gateway:8072/iam       # use the gateway
 
 resilience4j:
   circuitbreaker:

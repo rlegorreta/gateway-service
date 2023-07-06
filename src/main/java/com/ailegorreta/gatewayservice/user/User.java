@@ -16,28 +16,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- *  GatewayServiceApplication.kt
+ *  User.java
  *
  *  Developed 2023 by LegoSoftSoluciones, S.C. www.legosoft.com.mx
  */
-package com.ailegorreta.gatewayservice
+package com.ailegorreta.gatewayservice.user;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
-import org.springframework.boot.runApplication
-import org.springframework.context.annotation.ComponentScan
+import java.util.List;
 
 /**
- * Spring Cloud API Gateway
+ * User record to be user by the UserController class to get which user is in session using the rest call
+ * /user.
  *
  * @author rlh
  * @project : Gateway service
- * @date May 2023
+ * @date June 2023
  */
-@SpringBootApplication(exclude = [ReactiveUserDetailsServiceAutoConfiguration::class])
-@ComponentScan(basePackages = ["com.ailegorreta.commons.security", "com.ailegorreta.gatewayservice"])
-class GatewayServiceApplication
-
-fun main(args: Array<String>) {
-	runApplication<GatewayServiceApplication>(*args)
-}
+public record User(
+        String username,
+        String firstName,
+        String lastName,
+        List<String> roles
+){}
